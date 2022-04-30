@@ -8,7 +8,7 @@ from typing import (
 )
 
 from utils.mod import (
-    ModuloRange,
+    ModuloRangeWithPositiveStep,
     add,
 )
 from utils.encoders import Encoder
@@ -56,7 +56,7 @@ class Rotor:
 
         offset_to_be_set = self.offset + n
         self._visited_positions = tuple(
-            ModuloRange(self.offset, offset_to_be_set, self.alphabet_length)
+            ModuloRangeWithPositiveStep(self.offset, offset_to_be_set, mod=self.alphabet_length)
         )
 
         self.offset = offset_to_be_set % self.alphabet_length
@@ -151,22 +151,19 @@ class Enigma:
             self.rotors,
             self.rotors_roll_rules
         ):
-            if roll_rule is False:
+            if roll_rule is False or n == 0:
                 continue
-            if n > 0:
-                roll_rule = max(
-                    roll_rule,
-                    self.rotors[n-1].hit_notches_count()
-                )
-            rotor.roll(roll_rule)
+            rotor.roll(max(
+                roll_rule,
+                self.rotors[n-1].hit_notches_count()
+            ))
 
     def roll_reflector(self):
         if self.reflector_roll_rule is not False:
-            roll_number = max(
+            self.reflector.roll(max(
                 self.reflector_roll_rule,
                 self.rotors[-1].hit_notches_count()
-            )
-            self.reflector.roll(roll_number)
+            ))
 
     def encrypt_ind(self, ind: int) -> int:
         self.roll_rotors()
