@@ -27,7 +27,7 @@ class Rotor:
         self.offset = int(offset)
         self.ring = int(ring)
 
-        self.nothes = notches if notches is not None else tuple()
+        self.notches = notches if notches is not None else tuple()
         self._visited_positions = tuple()
 
         self.init_offset = int(offset)
@@ -63,7 +63,7 @@ class Rotor:
 
     def hit_notches_count(self) -> int:
         hits = 0
-        for n in self.nothes:
+        for n in self.notches:
             for pp in self._visited_positions:
                 if n == pp:
                     hits += 1
