@@ -3,6 +3,7 @@ from typing import (
     Iterable,
     Optional,
     Sequence,
+    Set,
     Tuple,
     Union,
 )
@@ -27,8 +28,8 @@ class Rotor:
         self.offset = int(offset)
         self.ring = int(ring)
 
-        self.notches = notches if notches is not None else tuple()
-        self._visited_positions = tuple()
+        self.notches: Set[int] = set(notches) if notches is not None else set()
+        self._visited_positions: Iterable[int] = tuple()
 
         self.init_offset = int(offset)
 
@@ -55,7 +56,7 @@ class Rotor:
             return
 
         offset_to_be_set = self.offset + n
-        self._visited_positions = tuple(
+        self._visited_positions = (
             ModuloRangeWithPositiveStep(self.offset, offset_to_be_set, mod=self.alphabet_length)
         )
 
@@ -63,10 +64,9 @@ class Rotor:
 
     def hit_notches_count(self) -> int:
         hits = 0
-        for n in self.notches:
-            for pp in self._visited_positions:
-                if n == pp:
-                    hits += 1
+        for pos in self._visited_positions:
+            if pos in self.notches:
+                hits += 1
         return hits
 
     def reset(self):
