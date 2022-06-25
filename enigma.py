@@ -10,7 +10,7 @@ from typing import (
 
 from utils.mod import (
     ModuloRangeWithPositiveStep,
-    add,
+    mod_add,
 )
 from utils.encoders import Encoder
 
@@ -21,37 +21,37 @@ class Rotor:
         wiring: Sequence[int],
         offset: int = 0,
         ring: int = 0,
-        notches: Iterable[int] = None
+        notches: Optional[Iterable[int]] = None
     ):
         self.alphabet_length = len(wiring)
         self.wiring = wiring
-        self.offset = int(offset)
-        self.ring = int(ring)
+        self.offset = offset
+        self.ring = ring
 
         self.notches: Set[int] = set(notches) if notches is not None else set()
         self._visited_positions: Iterable[int] = tuple()
 
-        self.init_offset = int(offset)
+        self.init_offset = offset
 
-    def encrypt_forward(self, machine_entry_ind: int):
+    def encrypt_forward(self, machine_entry_ind: int) -> int:
         al = self.alphabet_length
         of = self.offset - self.ring
 
-        rotor_entry_ind = add(machine_entry_ind, of, al)
+        rotor_entry_ind = mod_add(machine_entry_ind, of, al)
         rotor_exit_ind = self.wiring[rotor_entry_ind]
-        machine_exit_ind = add(rotor_exit_ind, -of, al)
+        machine_exit_ind = mod_add(rotor_exit_ind, -of, al)
         return machine_exit_ind  
 
-    def encrypt_backward(self, machine_entry_ind: int):
+    def encrypt_backward(self, machine_entry_ind: int) -> int:
         al = self.alphabet_length
         of = self.offset - self.ring
 
-        rotor_entry_ind = add(machine_entry_ind, of, al)
+        rotor_entry_ind = mod_add(machine_entry_ind, of, al)
         rotor_exit_ind = self.wiring.index(rotor_entry_ind)
-        machine_exit_ind = add(rotor_exit_ind, -of, al)
+        machine_exit_ind = mod_add(rotor_exit_ind, -of, al)
         return machine_exit_ind
 
-    def roll(self, n=1):
+    def roll(self, n: int = 1) -> None:
         if n == 0:
             return
 
@@ -69,17 +69,17 @@ class Rotor:
                 hits += 1
         return hits
 
-    def reset(self):
+    def reset(self) -> None:
         self.offset = self.init_offset
-        self._visited_positions = ()
+        self._visited_positions = tuple()
 
 
 class Reflector:
     def __init__(
         self,
         wiring: Sequence[int],
-        offset=0,
-        ring=0,
+        offset: int = 0,
+        ring: int = 0,
     ):
         self.alphabet_length = len(wiring)
         self.wiring = wiring
@@ -88,19 +88,19 @@ class Reflector:
 
         self.init_offset = offset
 
-    def roll(self, n=1):
-        self.offset = add(self.offset, n,  self.alphabet_length)
+    def roll(self, n: int = 1) -> None:
+        self.offset = mod_add(self.offset, n,  self.alphabet_length)
 
-    def reset(self):
+    def reset(self) -> None:
         self.offset = self.init_offset
 
-    def reflect(self, machine_entry_ind: int):
+    def reflect(self, machine_entry_ind: int) -> int:
         of = self.offset - self.ring
         al = self.alphabet_length
 
-        reflector_entry_ind = add(machine_entry_ind, of, al)
+        reflector_entry_ind = mod_add(machine_entry_ind, of, al)
         reflector_exit_ind = self.wiring[reflector_entry_ind]
-        machine_exit_ind = add(reflector_exit_ind, -of, al)
+        machine_exit_ind = mod_add(reflector_exit_ind, -of, al)
         return machine_exit_ind
 
 
@@ -137,7 +137,7 @@ class Enigma:
                 self.plugboard[l] = r
                 self.plugboard[r] = l
 
-    def reset(self):
+    def reset(self) -> None:
         for r in self.rotors:
             r.reset()
         self.reflector.reset()
@@ -145,7 +145,7 @@ class Enigma:
     def get_plugboard_commutated_ind(self, ind: int) -> int:
         return self.plugboard.get(ind, ind)
 
-    def roll_rotors(self):
+    def roll_rotors(self) -> None:
         for n, rotor, roll_rule in zip(
             range(len(self.rotors)),
             self.rotors,
@@ -158,7 +158,7 @@ class Enigma:
                 self.rotors[n-1].hit_notches_count()
             ))
 
-    def roll_reflector(self):
+    def roll_reflector(self) -> None:
         if self.reflector_roll_rule is not False:
             self.reflector.roll(max(
                 self.reflector_roll_rule,
@@ -186,7 +186,7 @@ class Enigma:
     def encrypt_data(self, encoded_data: Sequence[int]) -> Sequence[int]:
         return tuple(map(self.encrypt_ind, encoded_data))
 
-    def encrypt_text(self, text: str, encoder: Encoder) -> str:
+    def encrypt_text(self, text: str, encoder: Encoder[str]) -> str:
         char_list = []
         for char, char_ind in zip(text, encoder.encode(text)):
             if char_ind is None:

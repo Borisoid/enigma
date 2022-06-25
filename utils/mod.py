@@ -1,7 +1,7 @@
 from typing import Optional
 
 
-def add(a: int, b: int, mod: Optional[int] = None) -> int:
+def mod_add(a: int, b: int, /, mod: Optional[int] = None) -> int:
     return a + b if mod is None else (a + b) % mod
 
 
