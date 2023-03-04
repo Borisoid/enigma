@@ -1,43 +1,56 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from string import ascii_uppercase
-from typing import Generic, Optional, Sequence, TypeVar
+from typing import Generic
+from typing import Sequence
+from typing import TypeGuard
+from typing import TypeVar
 
 
-unencoded_data = TypeVar('unencoded_data')
-encoded_data = TypeVar('encoded_data', bound=Sequence[Optional[int]])
+Tp_unencoded_data = TypeVar("Tp_unencoded_data")
+
+Tp_encoded_data_piece_opt = int | None
+Tp_encoded_data_piece = int
+
+Tp_encoded_data_opt = Sequence[Tp_encoded_data_piece_opt]
+Tp_encoded_data = Sequence[Tp_encoded_data_piece]
 
 
-class Encoder(ABC, Generic[unencoded_data]):
+class Encoder(ABC, Generic[Tp_unencoded_data]):
     @abstractmethod
-    def encode(self, data: unencoded_data) -> encoded_data:
+    def try_encode(self, data: Tp_unencoded_data, /) -> Tp_encoded_data:
         pass
 
     @abstractmethod
-    def decode(self, data: encoded_data) -> unencoded_data:
+    def try_decode(self, data: Tp_encoded_data_opt, /) -> Tp_unencoded_data:
         pass
 
-    def _assert_none_not_in(self, data: encoded_data) -> None:
-        if None in data:
-            raise ValueError('Encoded data contains None.')
+    def _none_not_in(self, data: Tp_encoded_data_opt, /) -> TypeGuard[Tp_encoded_data]:
+        return None not in data
+
+    def _raise_if_none_in(self, data: Tp_encoded_data_opt, /) -> Tp_encoded_data:
+        if self._none_not_in(data):
+            return data
+        raise ValueError("contains None")
 
 
 class TextEncoder(Encoder[str]):
-    def __init__(self, alphabet: str):
+    def __init__(self, *, alphabet: str):
         self.alphabet = alphabet
         self.alphabet_set = set(alphabet)
 
-    def encode(self, text: str) -> encoded_data:
-        ind_list = []
+    def try_encode(self, text: str, /) -> Tp_encoded_data:
+        index_list: list[Tp_encoded_data_piece_opt] = []
         for ch in text:
             if ch in self.alphabet_set:
-                ind_list.append(self.alphabet.index(ch))
+                index_list.append(self.alphabet.index(ch))
             else:
-                ind_list.append(None)
-        return tuple(ind_list)
+                index_list.append(None)
 
-    def decode(self, data: encoded_data) -> str:
-        self._assert_none_not_in(data)
-        return ''.join(map(lambda i: self.alphabet[i], data))
+        return self._raise_if_none_in(tuple(index_list))
+
+    def try_decode(self, data: Tp_encoded_data_opt, /) -> str:
+        return "".join(map(lambda i: self.alphabet[i], self._raise_if_none_in(data)))
 
 
-ascii_uppercase_encoder = TextEncoder(ascii_uppercase)
+ascii_uppercase_encoder = TextEncoder(alphabet=ascii_uppercase)

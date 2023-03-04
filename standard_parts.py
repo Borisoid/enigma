@@ -1,139 +1,194 @@
 from string import ascii_uppercase
 
-from enigma import (
-    Rotor,
-    Reflector,
-)
+from enigma import Reflector
+from enigma import ReflectorSlot
+from enigma import Rotor
+from enigma import RotorSlot
+
 # from letter import *
 from utils.encoders import ascii_uppercase_encoder as codec
 
 
 #
-def RotorI(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('EKMFLGDQVZNTOWYHXUSPAIBRCJ'),
+def RotorI(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("EKMFLGDQVZNTOWYHXUSPAIBRCJ"),
+            ring=ring,
+            notches=codec.try_encode("Q"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('Q'),
     )
+
+
 #
-def RotorII(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('AJDKSIRUXBLHWTMCQGZNPYFVOE'),
+def RotorII(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("AJDKSIRUXBLHWTMCQGZNPYFVOE"),
+            ring=ring,
+            notches=codec.try_encode("E"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('E'),
     )
+
+
 #
-def RotorIII(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('BDFHJLCPRTXVZNYEIWGAKMUSQO'),
+def RotorIII(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("BDFHJLCPRTXVZNYEIWGAKMUSQO"),
+            ring=ring,
+            notches=codec.try_encode("V"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('V'),
     )
 
-def RotorIV(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('ESOVPZJAYQUIRHXLNFTGKDCMWB'),
+
+def RotorIV(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("ESOVPZJAYQUIRHXLNFTGKDCMWB"),
+            ring=ring,
+            notches=codec.try_encode("J"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('J'),
     )
 
-def RotorV(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('VZBRGITYUPSDNHLXAWMJQOFECK'),
+
+def RotorV(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("VZBRGITYUPSDNHLXAWMJQOFECK"),
+            ring=ring,
+            notches=codec.try_encode("Z"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('Z'),
     )
 
-def RotorVI(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('JPGVOUMFYQBENHZRDKASXLICTW'),
+
+def RotorVI(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("JPGVOUMFYQBENHZRDKASXLICTW"),
+            ring=ring,
+            notches=codec.try_encode("ZM"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('ZM'),
     )
 
-def RotorVII(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('NZJHGRCXMYSWBOUFAIVLPEKQDT'),
+
+def RotorVII(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("NZJHGRCXMYSWBOUFAIVLPEKQDT"),
+            ring=ring,
+            notches=codec.try_encode("ZM"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('ZM'),
     )
 
-def RotorVIII(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('FKQHTLXOCBJSPDZRAMEWNIUYGV'),
+
+def RotorVIII(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("FKQHTLXOCBJSPDZRAMEWNIUYGV"),
+            ring=ring,
+            notches=codec.try_encode("ZM"),
+        ),
         offset=offset,
-        ring=ring,
-        notches=codec.encode('ZM'),
     )
 
-def RotorBeta(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('LEYJVCNIXWPBQMDRTAKZGFUHOS'),
+
+def RotorBeta(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("LEYJVCNIXWPBQMDRTAKZGFUHOS"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
 
-def RotorGamma(offset=0, ring=0):
-    return Rotor(
-        wiring=codec.encode('FSOKANUERHMBTIYCWLQPZXVGJD'),
+
+def RotorGamma(offset: int = 0, ring: int = 0) -> RotorSlot:
+    return RotorSlot(
+        rotor=Rotor(
+            wiring=codec.try_encode("FSOKANUERHMBTIYCWLQPZXVGJD"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
+
 
 ###############################################################################
 
-def Reflector_A(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('EJMZALYXVBWFCRQUONTSPIKHGD'),
+
+def Reflector_A(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("EJMZALYXVBWFCRQUONTSPIKHGD"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
+
+
 #
-def Reflector_B(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('YRUHQSLDPXNGOKMIEBFZCWVJAT'),
+def Reflector_B(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("YRUHQSLDPXNGOKMIEBFZCWVJAT"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
 
-def Reflector_C(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('FVPJIAOYEDRZXWGCTKUQSBNMHL'),
+
+def Reflector_C(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("FVPJIAOYEDRZXWGCTKUQSBNMHL"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
 
-def Reflector_B_Thin(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('ENKQAUYWJICOPBLMDXZVFTHRGS'),
+
+def Reflector_B_Thin(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("ENKQAUYWJICOPBLMDXZVFTHRGS"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
 
-def Reflector_C_Thin(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('RDOBJNTKVEHMLFCWZAXGYIPSUQ'),
+
+def Reflector_C_Thin(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("RDOBJNTKVEHMLFCWZAXGYIPSUQ"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
 
-def ETW(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+
+def ETW(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
 
-def UTW(offset=0, ring=0):
-    return Reflector(
-        wiring=codec.encode('IMETCGFRAYSQBZXWLHKDVUPOJN'),
+
+def UTW(offset: int = 0, ring: int = 0) -> ReflectorSlot:
+    return ReflectorSlot(
+        reflector=Reflector(
+            wiring=codec.try_encode("IMETCGFRAYSQBZXWLHKDVUPOJN"),
+            ring=ring,
+        ),
         offset=offset,
-        ring=ring,
     )
